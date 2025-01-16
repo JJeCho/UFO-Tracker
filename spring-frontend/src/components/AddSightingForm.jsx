@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useState } from "react";
 import { addSighting } from "../api";
-import "./AddSightingForm.css";
+
 const AddSightingForm = ({ onAdd }) => {
   const getCurrentDate = () => {
     const today = new Date();

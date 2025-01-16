@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -46,19 +47,31 @@ public class UfoSightingService {
 
     private UfoSighting parseSighting(String[] fields) {
         UfoSighting sighting = new UfoSighting();
-        sighting.setPosted(LocalDate.parse(fields[0], DateTimeFormatter.ofPattern("MM/dd/yy")));
-        sighting.setDate(LocalDate.parse(fields[1], DateTimeFormatter.ofPattern("MM/dd/yy")));
-        sighting.setTime(LocalTime.parse(fields[2]));
-        sighting.setCity(fields[3]);
-        sighting.setState(fields[4]);
-        sighting.setShape(fields[5]);
-        sighting.setDuration(fields[6]);
-        sighting.setSummary(fields[7]);
-        sighting.setImages(fields[8].equalsIgnoreCase("Yes"));
-        sighting.setImgLink(fields[9]);
-        sighting.setLat(Double.parseDouble(fields[10]));
-        sighting.setLng(Double.parseDouble(fields[11]));
-        sighting.setPopulation(Integer.parseInt(fields[12]));
+        try {
+            // Parse datetime into date and time
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("MM/dd/yy HH:mm");
+            LocalDateTime dateTime = LocalDateTime.parse(fields[0], dateTimeFormatter);
+            sighting.setDate(dateTime.toLocalDate());
+            sighting.setTime(dateTime.toLocalTime());
+
+            // Set remaining fields
+            sighting.setCity(fields[1]);
+            sighting.setState(fields[2]);
+            // Country is optional; skipping unless needed.
+            sighting.setShape(fields[4]);
+            sighting.setDuration(fields[5]); // duration in seconds or hours/min
+            sighting.setSummary(fields[7]); // comments
+            sighting.setPosted(LocalDate.parse(fields[8], DateTimeFormatter.ofPattern("MM/dd/yy"))); // date posted
+            sighting.setLat(Double.parseDouble(fields[9]));
+            sighting.setLng(Double.parseDouble(fields[10]));
+
+            // Optional fields not present in CSV; default values
+            sighting.setImages(false);
+            sighting.setImgLink(null);
+            sighting.setPopulation(0);
+        } catch (Exception e) {
+            throw new RuntimeException("Error parsing row: " + e.getMessage());
+        }
         return sighting;
     }
 

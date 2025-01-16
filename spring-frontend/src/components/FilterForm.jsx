@@ -1,3 +1,4 @@
+// FilterForm.jsx
 /* eslint-disable react/prop-types */
 import { useState } from "react";
 
@@ -21,8 +22,18 @@ const FilterForm = ({ setFilters }) => {
   return (
     <form onSubmit={handleSubmit}>
       <h2>Filter Sightings</h2>
-      <input name="city" placeholder="City" value={filter.city} onChange={handleChange} />
-      <input name="state" placeholder="State" value={filter.state} onChange={handleChange} />
+      <input
+        name="city"
+        placeholder="City"
+        value={filter.city}
+        onChange={handleChange}
+      />
+      <input
+        name="state"
+        placeholder="State"
+        value={filter.state}
+        onChange={handleChange}
+      />
       <select name="sortBy" value={filter.sortBy} onChange={handleChange}>
         <option value="date">Date</option>
         <option value="city">City</option>
